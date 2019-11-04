@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AccountBalance.Domaine
+namespace AccountBalance.Test
 {
     public class Class1
     {
