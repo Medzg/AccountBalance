@@ -43,8 +43,11 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValueObjects\Cash\Cash.cs" />
+    <Compile Include="ValueObjects\Cash\AccountDetails.cs" />
     <Compile Include="ValueObjects\ValueObject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helper\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

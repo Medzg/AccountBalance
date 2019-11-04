@@ -14,7 +14,7 @@ namespace AccountBalance.Domaine
         public Guid Id { get; private set; }
         public string AccountName { get; private set; }
 
-        public Cash AccountCash { get; private set; }
+        public AccountDetails AccountDetail { get; private set; }
      
         public State AccountState { get; private set; } 
 
@@ -24,7 +24,7 @@ namespace AccountBalance.Domaine
                 throw new InvalidOperationException("Name account is required");
             Id = Guid.NewGuid();
             AccountName = accountName;
-            AccountCash = new Cash(blance, overdraftLimit, dailyWireTransferLimit);
+            AccountDetail = new AccountDetails(blance, overdraftLimit, dailyWireTransferLimit);
 
           
         }
@@ -34,22 +34,55 @@ namespace AccountBalance.Domaine
         {
             if (amount < 0)
                 throw new InvalidOperationException("You can't deposite negative amount");
-            AccountCash += new Cash(amount);
-            if (AccountState == State.Blocked && AccountCash.Balance >= 0)
+            AccountDetail = AccountDetails.depositMoney(AccountDetail, amount);
+            if (AccountState == State.Blocked && AccountDetail.Debt >= 0)
                 AccountState = State.Active;
 
         }
 
 
+
+        public void DepositeCheques(decimal amount)
+        {
+
+            // need to be implemented
+            throw new NotImplementedException();
+        }
+
+
+
+        public void WithdrawCash(decimal amount)
+        {
+            try { 
+
+               AccountDetail = AccountDetails.depositMoney(AccountDetail,amount);
+              }
+            catch (InvalidOperationException)
+            {
+                AccountState = State.Blocked;
+            }
+         
+        }
+
+
+        public void WireTransfer(decimal amount)
+        {
+            if (amount < 0)
+                throw new ArgumentOutOfRangeException("amount can't be negative");
+            if (AccountDetail.DailyWireTransferLimit > AccountDetail.WithdrawnToday + amount)
+                throw new InvalidOperationException("Operation failed : wire transfer limit passed for today");
+            AccountDetail = AccountDetails.depositMoney(AccountDetail, amount);
+
+        }
         public void ChangeDailyWireTransferLimit(decimal wireTransfer_value)
         {
-            AccountCash = Cash.SetDailyWireTransferLimit(AccountCash, wireTransfer_value);
+            AccountDetail = AccountDetails.SetDailyWireTransferLimit(AccountDetail, wireTransfer_value);
         }
 
         public void ChangeOverdraftLimit(decimal overdraft_value)
         {
 
-            AccountCash = Cash.SetOverdraftLimit(AccountCash, overdraft_value);
+            AccountDetail = AccountDetails.SetOverdraftLimit(AccountDetail, overdraft_value);
           
         }
 
