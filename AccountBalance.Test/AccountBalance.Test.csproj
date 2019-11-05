@@ -58,7 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Domaine\ValueObject\CashTestSpec.cs" />
+    <Compile Include="Domaine\AccountTestSpec.cs" />
+    <Compile Include="Domaine\ValueObject\AccountDetailTestSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccountBalance.Domaine\AccountBalance.Domaine.csproj">
+      <Project>{b744cf77-e8f1-40a6-8be4-76cbdf0ee420}</Project>
+      <Name>AccountBalance.Domaine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -33,16 +33,19 @@ namespace AccountBalance.Domaine.ValueObjects.Cash
             
         }
        
-        public static AccountDetails SetDailyWireTransferLimit(AccountDetails AccountCash,decimal wire_transfer)
+        public static AccountDetails SetDailyWireTransferLimit(AccountDetails AccountCash,decimal wire_transfer_ammount)
         {
-            return new AccountDetails(AccountCash.Debt, AccountCash.DailyWireTransferLimit, wire_transfer, AccountCash.WithdrawnToday);
+            if (wire_transfer_ammount < 0)
+                throw new InvalidOperationException("wire transfer should not be negative");
+            return new AccountDetails(AccountCash.Debt, AccountCash.DailyWireTransferLimit, wire_transfer_ammount, AccountCash.WithdrawnToday);
 
         }
 
-        public static AccountDetails SetOverdraftLimit(AccountDetails AccountCash,decimal overdraft)
+        public static AccountDetails SetOverdraftLimit(AccountDetails AccountCash,decimal overdraft_ammount)
         {
-
-            return new AccountDetails(AccountCash.Debt, overdraft, AccountCash.DailyWireTransferLimit, AccountCash.WithdrawnToday);
+            if (overdraft_ammount < 0)
+                throw new InvalidOperationException("overdraft ammount should not be negative");
+            return new AccountDetails(AccountCash.Debt, overdraft_ammount, AccountCash.DailyWireTransferLimit, AccountCash.WithdrawnToday);
         }
 
 
@@ -60,8 +63,8 @@ namespace AccountBalance.Domaine.ValueObjects.Cash
        public static  AccountDetails depositMoney(AccountDetails accountDetails, decimal amount)
         {
 
-            if (amount < 0)
-                throw new ArgumentOutOfRangeException("amount can't be negative");
+            if (amount <= 0)
+                throw new ArgumentOutOfRangeException("amount can't be negative or 0");
             return new AccountDetails(accountDetails.Debt + amount, accountDetails.OverdraftLimit, accountDetails.DailyWireTransferLimit, accountDetails.WithdrawnToday);
         }
 

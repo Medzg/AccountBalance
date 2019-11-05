@@ -36,7 +36,7 @@ namespace AccountBalance.Domaine
                 throw new InvalidOperationException("You can't deposite negative amount");
             AccountDetail = AccountDetails.depositMoney(AccountDetail, amount);
             if (AccountState == State.Blocked && AccountDetail.Debt >= 0)
-                AccountState = State.Active;
+                ChangeState(State.Active);
 
         }
 
@@ -59,18 +59,26 @@ namespace AccountBalance.Domaine
               }
             catch (InvalidOperationException)
             {
-                AccountState = State.Blocked;
+                ChangeState(State.Blocked);
+               
             }
          
         }
 
+        private void ChangeState(State state)
+        {
+
+            AccountState = state;
+        }
 
         public void WireTransfer(decimal amount)
         {
             if (amount < 0)
                 throw new ArgumentOutOfRangeException("amount can't be negative");
-            if (AccountDetail.DailyWireTransferLimit > AccountDetail.WithdrawnToday + amount)
+            if (AccountDetail.DailyWireTransferLimit > AccountDetail.WithdrawnToday + amount) {
+               ChangeState(State.Blocked);
                 throw new InvalidOperationException("Operation failed : wire transfer limit passed for today");
+            }
             AccountDetail = AccountDetails.depositMoney(AccountDetail, amount);
 
         }
