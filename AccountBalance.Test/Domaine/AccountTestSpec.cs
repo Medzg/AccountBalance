@@ -159,6 +159,68 @@ namespace AccountBalance.Test.Domaine
             Assert.Equal(State.Blocked, account.AccountState);
         }
 
+        [Fact]
+
+        public void change_OverdraftLimit_value()
+        {
+
+            var account = new Account("Med", 100);
+
+            account.ChangeOverdraftLimit(200);
+
+            Assert.Equal(200, account.AccountDetail.OverdraftLimit);
+        }
+
+        [Fact]
+
+        public void change_OverdraftLimit_value_to_negative_should_throw_exception()
+        {
+
+            var account = new Account("Med", 100);
+
+           Action action = ()=> account.ChangeOverdraftLimit(-200);
+
+            Assert.Throws<InvalidOperationException>(action);
+
+        }
+
+
+        [Fact]
+
+        public void Change_DailyWireTransferLimit_value()
+        {
+
+            var account = new Account("Med", 100);
+
+            account.ChangeDailyWireTransferLimit(200);
+
+            Assert.Equal(200, account.AccountDetail.DailyWireTransferLimit);
+        }
+
+        [Fact]
+
+        public void Change_DailyWireTransferLimit_value_to_negative_should_throw_exception()
+        {
+
+            var account = new Account("Med", 100);
+
+            Action action = () => account.ChangeDailyWireTransferLimit(-200);
+
+            Assert.Throws<InvalidOperationException>(action);
+
+        }
+
+
+        [Fact]
+        public void Deposit_cheque_add_to_cheques_list()
+        {
+            var account = new Account("Med", 100);
+
+
+            account.DepositeCheques(100);
+
+            Assert.Single(account.Cheques);
+        }
 
     }
 }

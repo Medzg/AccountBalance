@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="Domaine\AccountTestSpec.cs" />
     <Compile Include="Domaine\ValueObject\AccountDetailTestSpec.cs" />
+    <Compile Include="Domaine\ValueObject\ChequeTestSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

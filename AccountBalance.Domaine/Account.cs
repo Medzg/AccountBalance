@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using AccountBalance.Domaine.Helpers;
 namespace AccountBalance.Domaine
 {
     public enum State{Blocked , Active};
@@ -18,6 +18,8 @@ namespace AccountBalance.Domaine
      
         public State AccountState { get; private set; } 
 
+        public List<Cheque> Cheques { get; private set;} 
+
         public Account(string accountName , decimal debt ,  decimal overdraftLimit = 0 ,decimal dailyWireTransferLimit = 0)
         {
             if (string.IsNullOrEmpty(accountName))
@@ -27,8 +29,7 @@ namespace AccountBalance.Domaine
             Id = Guid.NewGuid();
             AccountName = accountName;
             AccountDetail = new AccountDetails(debt, overdraftLimit, dailyWireTransferLimit);
-
-          
+            Cheques = new List<Cheque>();
         }
 
 
@@ -46,8 +47,9 @@ namespace AccountBalance.Domaine
         public void DepositeCheques(decimal amount)
         {
 
-            // need to be implemented
-            throw new NotImplementedException();
+            var cheque = new Cheque(amount, Helper.GetNextBusinessDay(DateTime.Now));
+
+            Cheques.Add(cheque);
         }
 
 
