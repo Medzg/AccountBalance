@@ -222,5 +222,17 @@ namespace AccountBalance.Test.Domaine
             Assert.Single(account.Cheques);
         }
 
+        [Fact]
+        public void Deposit_cheque_add_to_cheques_list_with_negative_amount_should_throw_exception()
+        {
+
+            var account = new Account("Med", 100);
+
+            Action action = () => account.DepositeCheques(-11);
+
+            Assert.Throws<InvalidOperationException>(action);
+
+            Assert.Empty(account.Cheques);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace AccountBalance.Domaine.Helpers
         {
             TimeSpan ts = new TimeSpan(09, 00, 0);
             if (date.DayOfWeek >= DayOfWeek.Monday && date.DayOfWeek <= DayOfWeek.Friday
-                && date.Hour >= DateTime.Parse(":00").Hour && date.Hour < DateTime.Parse("09:00").Hour)
+                && date.Hour >= DateTime.Parse("00:00").Hour && date.Hour < DateTime.Parse("09:00").Hour)
             {
                 DateTime bday = DateTime.UtcNow.Date + ts;
                 return date + bday.Subtract(date);
