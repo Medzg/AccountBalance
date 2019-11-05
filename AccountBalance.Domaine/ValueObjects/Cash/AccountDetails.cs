@@ -49,12 +49,18 @@ namespace AccountBalance.Domaine.ValueObjects.Cash
         }
 
 
-       public static AccountDetails WithdrowMoney(AccountDetails accountDetail ,  decimal amount)
+       public static AccountDetails WithdrowMoney(AccountDetails accountDetail ,  decimal amount, bool wire_transfer = false)
         {
             if (amount < 0)
                 throw new ArgumentOutOfRangeException("amount can't be negative");
             if (accountDetail.Debt - amount < -accountDetail.OverdraftLimit)
                 throw new InvalidOperationException("over draft limit passed");
+            if (wire_transfer) { 
+                if (accountDetail.DailyWireTransferLimit < accountDetail.WithdrawnToday + amount)
+                    throw new InvalidOperationException("you passed your daily wire Transfer");
+            return new AccountDetails(accountDetail.Debt - amount, accountDetail.OverdraftLimit, accountDetail.OverdraftLimit, accountDetail.WithdrawnToday+amount);
+               }
+
             return new AccountDetails(accountDetail.Debt - amount, accountDetail.OverdraftLimit, accountDetail.OverdraftLimit, accountDetail.WithdrawnToday);
 
         }
@@ -65,18 +71,17 @@ namespace AccountBalance.Domaine.ValueObjects.Cash
 
             if (amount <= 0)
                 throw new ArgumentOutOfRangeException("amount can't be negative or 0");
+          
             return new AccountDetails(accountDetails.Debt + amount, accountDetails.OverdraftLimit, accountDetails.DailyWireTransferLimit, accountDetails.WithdrawnToday);
         }
-
-
-
 
 
         protected override bool EqualsCore(AccountDetails valueObject)
         {
             return Debt == valueObject.Debt &&
                 this.DailyWireTransferLimit == valueObject.DailyWireTransferLimit &&
-                this.OverdraftLimit == valueObject.OverdraftLimit;
+                this.OverdraftLimit == valueObject.OverdraftLimit &&
+                this.WithdrawnToday ==  valueObject.WithdrawnToday;
         }
 
         protected override int GetHashCodeCore()

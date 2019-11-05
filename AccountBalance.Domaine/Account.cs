@@ -73,8 +73,7 @@ namespace AccountBalance.Domaine
 
         public void WireTransfer(decimal amount)
         {
-            if (amount < 0)
-                throw new ArgumentOutOfRangeException("amount can't be negative");
+           
             if (AccountDetail.DailyWireTransferLimit > AccountDetail.WithdrawnToday + amount) {
                ChangeState(State.Blocked);
                 throw new InvalidOperationException("Operation failed : wire transfer limit passed for today");

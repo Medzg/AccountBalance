@@ -28,6 +28,22 @@ namespace AccountBalance.Test.Domaine.ValueObject
 
         }
 
+
+
+        [Fact]
+
+        public void two_AccountDetail_object_should_equals_when_they_have_same_value_property()
+        {
+
+            var accountDetail1 = new AccountDetails(100, 100, 100, 100);
+
+            var accountDetail2 = new AccountDetails(100, 100, 100, 100);
+
+
+
+            Assert.Equal(accountDetail1, accountDetail2);
+
+        }
         [Theory]
         [InlineData(0)]
         [InlineData(-55)]
@@ -38,8 +54,8 @@ namespace AccountBalance.Test.Domaine.ValueObject
             var accountDetail = new AccountDetails(100);
 
             Action action = () => { accountDetail = AccountDetails.depositMoney(accountDetail, amount); };
-
-
+            
+           
             Assert.Throws<ArgumentOutOfRangeException>(action);
 
 
@@ -48,7 +64,7 @@ namespace AccountBalance.Test.Domaine.ValueObject
 
 
         [Fact]
-        public void DailyWireTransferLimit_should_update_it_value()
+        public void DailyWireTransferLimit_should_update_its_value()
         {
 
             var accountDetail = new AccountDetails(100);
@@ -78,6 +94,91 @@ namespace AccountBalance.Test.Domaine.ValueObject
 
 
         }
+
+
+
+        [Fact]
+        public void OverdraftLimit_should_up_its_value()
+        {
+
+
+            var accountDetail = new AccountDetails(100);
+
+            accountDetail = AccountDetails.SetOverdraftLimit(accountDetail, 500);
+
+
+            Assert.Equal(100, accountDetail.Debt);
+
+            Assert.Equal(500, accountDetail.OverdraftLimit);
+
+        }
+
+
+
+        [Fact]
+
+        public void OverdraftLimit_should_throw_exception_and_all_other_property_keep_their_state()
+        {
+            var accountDetail = new AccountDetails(100, 100, 100);
+
+            Action action = () => accountDetail = AccountDetails.SetOverdraftLimit(accountDetail, -100);
+
+            Assert.Throws<InvalidOperationException>(action);
+
+            Assert.Equal(100, accountDetail.Debt);
+            Assert.Equal(100, accountDetail.DailyWireTransferLimit);
+            Assert.Equal(100, accountDetail.OverdraftLimit);
+
+
+        }
+
+
+
+        [Fact]
+
+        public void WithdrowMoney_from_account_should_update_debt_ammount()
+        {
+
+            var accountDetail = new AccountDetails(100, 100);
+
+            accountDetail = AccountDetails.WithdrowMoney(accountDetail, 50);
+
+
+            Assert.Equal(50, accountDetail.Debt);
+
+        }
+
+
+        [Fact]
+
+        public void withdrowMoney_from_account_should_upadte_debt_ammount_even_if_debt_ammount_is_negative()
+        {
+
+            var accountdetail = new AccountDetails(100, 100);
+
+
+            accountdetail = AccountDetails.WithdrowMoney(accountdetail, 150);
+
+
+            Assert.Equal(-50, accountdetail.Debt);
+
+        }
+
+
+        [Fact]
+
+        public void withdrowMoney_should_not_pass_OverdraftLimit()
+        {
+
+            var accountdetail = new AccountDetails(100, 100);
+
+            Action action = () => AccountDetails.WithdrowMoney(accountdetail, 250);
+
+            Assert.Throws<InvalidOperationException>(action);
+        }
+
+
+
 
 
     }
